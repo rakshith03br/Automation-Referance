@@ -100,7 +100,7 @@ Common use	Removing duplicates, fast membership checks, math-style set operation
 
 
 ## ==========================================================
-## ADDITIONAL NOTES FOR INTERVIEW PREPARATION (4 YOE LEVEL)
+## ADDITIONAL NOTES FOR INTERVIEW PREPARATION
 ## ==========================================================
 
 # -------------------------

@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
 
 # ==============================================================================
-# ADDITIONAL NOTES FOR INTERVIEW PREPARATION (4 YOE LEVEL)
+# ADDITIONAL NOTES FOR INTERVIEW PREPARATION
 # ==============================================================================
 
 # -------------------------

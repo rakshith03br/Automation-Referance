@@ -36,6 +36,7 @@ print(x)  # 5, the global was actually changed
 # --------------------------------------------------------------------------------------------
 # nonlocal scope
 print("nonlocal")
+x = 20
 def outer():
     x = 10
     def inner():
@@ -45,7 +46,7 @@ def outer():
     inner()
     print(x)  # 5
 outer()
-
+print(x) # 20
 # --------------------------------------------------------------------------------------------
 # A classic use of nonlocal is building a stateful closure, like a counter:
 def make_counter():

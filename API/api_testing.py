@@ -1,7 +1,6 @@
 """
 ================================================================================
 REST API TESTING & AUTOMATION WITH PYTHON — REFERENCE NOTES
-For QA Automation Engineers (~4 YOE)
 ================================================================================
 
 This file is organized as a single reference module. Each SECTION covers one

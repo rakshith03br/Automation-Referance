@@ -139,20 +139,15 @@ WARNING: never mix implicit + explicit wait on the same driver instance
 
 def wait_for_clickable(driver, locator, timeout=10):
     """Example of an explicit wait using expected_conditions (EC)."""
-    return WebDriverWait(driver, timeout).until(
-        EC.element_to_be_clickable(locator)
-    )
+    return WebDriverWait(driver, timeout).until(EC.element_to_be_clickable(locator))
 
 
 def wait_for_fluent(driver, locator, timeout=10, poll_frequency=0.5):
     """Example of a fluent wait: same as explicit wait but with a
     configurable polling frequency and ignored exceptions while polling."""
-    return WebDriverWait(
-        driver,
-        timeout,
-        poll_frequency=poll_frequency,
-        ignored_exceptions=[NoSuchElementException, StaleElementReferenceException],
-    ).until(EC.presence_of_element_located(locator))
+    return WebDriverWait(driver, timeout, poll_frequency=poll_frequency,
+                         ignored_exceptions=[NoSuchElementException, StaleElementReferenceException],
+                         ).until(EC.presence_of_element_located(locator))
 
 
 # Common expected_conditions (EC) used day to day:

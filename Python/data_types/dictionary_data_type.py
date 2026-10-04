@@ -35,7 +35,7 @@ print(Employee.get("email", "Not Found"))  # Not Found — custom default value
 # Membership checks look at keys by default, not values:
 print("Name" in Employee)  # True
 print("Age" in Employee)  # True
-print("Dubai" in Employee)  # True
+print("Dubai" in Employee)  # False
 print("Rakshith" in Employee.values())  # True — need .values() to check values
 
 
@@ -69,9 +69,10 @@ print(Employee) ## {}
 ## Dictionary slicing
 import itertools
 Employee = {"Name": "Rakshith", "Age": 25, "salary": 25000, "Place": "Bangalore"}
-print(dict(itertools.islice(Employee.items(), 2)))
-print(dict(itertools.islice(Employee.items(), 2, 3)))
-print(dict(itertools.islice(Employee.items(), 2, 4)))
+print(dict(itertools.islice(Employee.items(), 2)))      # {'Name': 'Rakshith', 'Age': 25}
+print(dict(itertools.islice(Employee.items(), 2, 3)))       # {'salary': 25000}
+print(dict(itertools.islice(Employee.items(), 2, 4)))       # {"salary": 25000, "Place": "Bangalore"}
+print(dict(itertools.islice(Employee.items(), 5)))      # {'Name': 'Rakshith', 'Age': 25, 'salary': 25000, 'Place': 'Bangalore'}
 
 Employee = {}
 
@@ -183,7 +184,7 @@ Place : Bangalore
 # """
 # def fun():
 #     d = {x: y for x, y in zip(key, value)}
-#     d1=dict(zip(key,value))
+#     d1 = dict(zip(key,value))
 #     print(d) ## {'p': 56, 'q': 67, 'r': 43, 's': 12, 't': 6}
 #     print(d1) ## {'p': 56, 'q': 67, 'r': 43, 's': 12, 't': 6}
 # key = ['p', 'q', 'r', 's', 't']
@@ -258,7 +259,7 @@ d2 = {"b": 3, "c": 4, "d": 5}
 
 # 1. Using ** unpacking (Python 3.5+)
 merged = {**d1, **d2}       # ** unpacking
-print(merged)
+print(merged)       # {'a': 1, 'b': 3, 'c': 4, 'd': 5}
 
 # 2. Using | operator (Python 3.9+) — cleanest way
 merged_1 = d1 | d2      # | operator
@@ -293,7 +294,7 @@ Common use	                Storing structured/labeled data, fast lookups by key
 
 
 ## ==========================================================
-## ADDITIONAL NOTES FOR INTERVIEW PREPARATION (4 YOE LEVEL)
+## ADDITIONAL NOTES FOR INTERVIEW PREPARATION
 ## ==========================================================
 
 # -------------------------
@@ -438,8 +439,8 @@ swapped = {v: k for k, v in original.items()}
 print(swapped)   # {1: 'a', 2: 'b', 3: 'c'}
 
 # nested dict comprehension - multiplication table
-mult_table = {i: {j: i * j for j in range(1, 4)} for i in range(1, 4)}
-print(mult_table)   # {1: {1: 1, 2: 2, 3: 3}, 2: {1: 2, 2: 4, 3: 6}, 3: {1: 3, 2: 6, 3: 9}}
+mult_table = {i: {j: i * j for j in range(11, 14)} for i in range(1, 4)}
+print(mult_table)   # {1: {11: 11, 12: 12, 13: 13}, 2: {11: 22, 12: 24, 13: 26}, 3: {11: 33, 12: 36, 13: 39}}
 
 
 ## ==========================================================

@@ -14,6 +14,28 @@ NOTES:
 - @property: lets you access a method like an attribute; @x.setter lets you validate
     on assignment.
 """
+# ========================================================================
+"""
+A Python decorator is a function that takes another function as input, extends or modifies 
+    its behavior, and returns a new function—all without changing the original function's 
+    source code.
+Decorators act as "wrappers". They allow you to execute code before and after the target 
+    function runs, making them highly effective for keeping code clean, readable, and reusable.
+"""
+def my_decorator(func):
+    def wrapper():
+        print("Something is happening BEFORE the function is called.")
+        func()  # This runs the original function
+        print("Something is happening AFTER the function is called.")
+    return wrapper
+
+@my_decorator
+def say_hello():
+    print("Hello!")
+
+say_hello()
+# ========================================================================
+
 import functools
 import time
 

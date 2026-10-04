@@ -45,7 +45,7 @@ Key takeaway:
 """
 
 ## ==========================================================
-## ADDITIONAL NOTES FOR INTERVIEW PREPARATION (4 YOE LEVEL)
+## ADDITIONAL NOTES FOR INTERVIEW PREPARATION
 ## ==========================================================
 # The table above is a great reference, but interviewers usually want you to
 # PROVE these properties with code and explain WHY they matter. Below is a
