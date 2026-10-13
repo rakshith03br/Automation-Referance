@@ -389,7 +389,6 @@ print(Counter.__dict__.keys())  # shows class-level attributes/methods (and more
 
 ## ==========================================================
 ## INTERVIEW QUESTIONS ON CLASSES, OBJECTS & OOP CONCEPTS
-## (For a candidate with ~4 years of experience. Answers intentionally omitted for practice.)
 ## ==========================================================
 
 # 1. What is the difference between an instance variable and a class variable?

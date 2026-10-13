@@ -7,8 +7,7 @@ test module under this directory tree — no explicit import needed.
 
 import pytest
 from selenium import webdriver
-
-from Practice.Selenium.Page_Objects.login_page import LoginPage
+from Selenium.Page_Objects.login_page import LoginPage
 
 
 def _new_browser():

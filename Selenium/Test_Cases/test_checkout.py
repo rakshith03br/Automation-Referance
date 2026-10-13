@@ -1,8 +1,8 @@
 import pytest
 
-from Practice.Selenium.Page_Objects.inventory_page import InventoryPage
-from Practice.Selenium.Page_Objects.cart_page import CartPage
-from Practice.Selenium.Page_Objects.checkout_page import CheckoutStepOnePage
+from Selenium.Page_Objects.inventory_page import InventoryPage
+from Selenium.Page_Objects.cart_page import CartPage
+from Selenium.Page_Objects.checkout_page import CheckoutStepOnePage
 
 
 @pytest.mark.RUNTEST

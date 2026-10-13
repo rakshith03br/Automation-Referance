@@ -12,20 +12,20 @@ my_str = 'I am from bangalore and I am from karnataka'
 # re.match() — checks for a match only at the start of the string
 p = 'I'
 match_obj = re.match(p, my_str)
-print(match_obj.group(0))
+print(match_obj.group(0))       # I
 
 #---------------------------------------------------------------------------------
 # search() will return only the first occurrence of the string
 # re.search() — finds first match anywhere in the string
 a = 'from'
 search_obj = re.search(a, my_str)
-print(search_obj.group())
+print(search_obj.group())       # from
 
 #---------------------------------------------------------------------------------
 # findall() will return the list of number of times the pattern repeated in the string
 # re.findall() — returns all matches as a list
 findall_obj = re.findall(a, my_str)
-print(findall_obj)
+print(findall_obj)      # ['from', 'from']
 
 #---------------------------------------------------------------------------------
 # finditer() will return the matched object( combination of search() and findall() )

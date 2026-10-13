@@ -119,18 +119,18 @@ def element_exists(driver, locator) -> bool:
 # 4. WAITS
 # ============================================================
 """
-Type        How                                                         Notes
+Type        How                                                           Notes
 ------------------------------------------------------------------------------
-Implicit    driver.implicitly_wait(10)                                  Global; polls DOM before
-                                                                          NoSuchElementException.
-                                                                          Applies to EVERY find call.
-Explicit    WebDriverWait(driver, 10).until(EC.element_to_be_clickable) Targeted wait for one
-                                                                          condition on one element.
-                                                                          PREFERRED.
+Implicit    driver.implicitly_wait(10)                                    Global; polls DOM before
+                                                                           NoSuchElementException.
+                                                                           Applies to EVERY find call.
+Explicit    WebDriverWait(driver, 10).until(EC.element_to_be_clickable)   Targeted wait for one
+                                                                           condition on one element.
+                                                                           PREFERRED.
 Fluent      WebDriverWait(driver, 10, poll_frequency=1,
-            ignored_exceptions=[...])                                   Explicit wait + configurable
-                                                                          poll interval / ignored
-                                                                          exceptions.
+            ignored_exceptions=[...]).until(EC.element_to_be_clickable)   Explicit wait + configurable
+                                                                           poll interval / ignored
+                                                                           exceptions.
 
 WARNING: never mix implicit + explicit wait on the same driver instance
 -- their timeouts can stack unpredictably.
@@ -241,7 +241,7 @@ def safe_click(driver, locator, retries=3):
 
 # ============================================================================
 # ============================================================================
-#            INTERVIEW QUESTIONS & ANSWERS  (4 YEARS EXPERIENCE)
+#            INTERVIEW QUESTIONS & ANSWERS
 # ============================================================================
 # ============================================================================
 

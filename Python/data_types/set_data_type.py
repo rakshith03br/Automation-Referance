@@ -79,7 +79,7 @@ print(students_math ^ students_science) # {'Alice', 'David'}
 #--------------------------------------------------------------------------------------------------#
 #--------------------------------------------------------------------------------------------------#
 """
-Frozenset — the immutable version :- frozenset()
+Frozenset — the immutable version of 'set' is 'frozenset' :- frozenset()
 
 If you need a set that can't be changed after creation (e.g., to use as a dictionary key, 
     since regular sets aren't hashable):
@@ -286,68 +286,207 @@ print(all_unique)         # {1, 2, 3, 4, 5, 6, 7} -> union of everything, no dup
 
 
 ## ==========================================================
-## INTERVIEW QUESTIONS ON PYTHON SETS
-## (For a candidate with ~4 years of experience. Answers intentionally omitted for practice.)
+## INTERVIEW QUESTIONS ON PYTHON SETS (WITH ANSWERS)
 ## ==========================================================
 
 # 1. Why is checking membership (`x in my_set`) much faster than checking
 #    membership in a list, for large collections? What data structure is a
 #    set built on top of internally?
 #
+#    ANSWER: A set is built on a HASH TABLE. To check `x in my_set`, Python
+#    computes hash(x) and jumps directly to the slot where x would be stored,
+#    so the check is O(1) on average no matter how big the set is. A list has
+#    no such index, so `x in my_list` must compare x against each element one
+#    by one, which is O(n). For a million elements, that is the difference
+#    between one lookup and up to a million comparisons.
+#
 # 2. What is the difference between set.remove(x) and set.discard(x)? Which
 #    one raises an error if x isn't present?
+#
+#    ANSWER: Both delete x if it exists. The difference is only when x is
+#    missing: remove(x) raises a KeyError, while discard(x) silently does
+#    nothing. Use remove() when a missing element indicates a bug you want to
+#    catch, and discard() when "remove it if it's there" is all you need.
 #
 # 3. What does set.pop() do, and what happens if you call it on an empty
 #    set? Does it remove a "random" element in the statistical sense?
 #
+#    ANSWER: pop() removes and RETURNS one element from the set. On an empty
+#    set it raises KeyError: 'pop from an empty set'. The element is
+#    ARBITRARY, not random: which one comes out depends on the internal
+#    hash-table layout, so it is unspecified but not statistically random.
+#    For small ints in CPython it is often the smallest value, but you must
+#    never rely on that. If you need true randomness, use
+#    random.choice(list(s)).
+#
 # 4. Why must elements added to a set be hashable? What types can and cannot
 #    be added to a set, and why?
 #
+#    ANSWER: The set stores each element in a slot determined by its hash. If
+#    an element could change after being added, its hash would change and the
+#    set could no longer find it. So elements must be hashable, meaning their
+#    hash never changes during their lifetime.
+#      CAN be added:    int, float, str, bool, None, tuple (if all its items
+#                       are hashable), frozenset
+#      CANNOT be added: list, dict, set (all mutable, therefore unhashable)
+#    e.g. s.add([1, 2]) -> TypeError: unhashable type: 'list'
+#
 # 5. What is the difference between a set and a frozenset? Why is frozenset
 #    hashable while a regular set is not?
+#
+#    ANSWER: A set is mutable (add, remove, update, etc.), while a frozenset is
+#    immutable: once created, its contents can never change. Both support the
+#    same read-only operations (in, |, &, -, ^, subset checks). Because a
+#    frozenset's contents are fixed, its hash can be computed once and will
+#    always stay valid, so Python makes it hashable. A regular set's
+#    contents (and so its hash) could change at any time, so it is
+#    deliberately unhashable.
 #
 # 6. How would you remove duplicates from a list while PRESERVING the
 #    original order of first occurrence? Why doesn't simply calling
 #    list(set(my_list)) achieve this?
 #
+#    ANSWER: Use list(dict.fromkeys(my_list)). Dict keys are unique AND
+#    dicts preserve insertion order (guaranteed since Python 3.7), so the
+#    first occurrence of each value is kept in its original position:
+#        list(dict.fromkeys([3, 1, 3, 2, 1]))  -> [3, 1, 2]
+#    list(set(my_list)) removes duplicates too, but sets are unordered, so
+#    the resulting order follows the hash table, not the original list.
+#    An alternative is a loop with a "seen" set:
+#        seen, result = set(), []
+#        for x in my_list:
+#            if x not in seen:
+#                seen.add(x)
+#                result.append(x)
+#
 # 7. What is the difference between the `|` operator and the `.update()`
 #    method when combining two sets? Which one mutates the original set?
+#
+#    ANSWER: `a | b` creates and returns a NEW set; a and b are unchanged.
+#    `a.update(b)` (same as `a |= b`) adds b's elements INTO a, modifying a
+#    in place and returning None. So update() mutates the original.
+#    Extra detail: `|` requires both operands to be sets, while update()
+#    (and union()) accept any iterable, e.g. a.update([4, 5]).
 #
 # 8. What do the `<=`, `<`, `>=`, and `>` operators mean when used between
 #    two sets? How are they different from numeric comparison?
 #
+#    ANSWER: Between sets they test containment, not size or value:
+#      a <= b  -> a is a SUBSET of b (every element of a is in b)
+#      a <  b  -> a is a PROPER subset (subset, and a != b)
+#      a >= b  -> a is a SUPERSET of b
+#      a >  b  -> a is a PROPER superset
+#    Unlike numbers, sets are only PARTIALLY ordered: for {1, 2} and {3, 4},
+#    a <= b, a >= b, and a == b are ALL False, because neither contains
+#    the other. With numbers, one of <, ==, > is always True.
+#
 # 9. What does `a.isdisjoint(b)` check for two sets a and b?
+#
+#    ANSWER: It returns True if a and b have NO elements in common, i.e.
+#    their intersection is empty. {1, 2}.isdisjoint({3, 4}) -> True,
+#    {1, 2}.isdisjoint({2, 3}) -> False.
 #
 # 10. Can you use a set as a dictionary key? Can you use a frozenset as a
 #     dictionary key? Explain the difference.
 #
+#    ANSWER: A set CANNOT be a dict key, because dict keys must be hashable
+#    and sets are mutable/unhashable (TypeError: unhashable type: 'set').
+#    A frozenset CAN be a dict key, because it is immutable and hashable.
+#        d = {frozenset([1, 2]): "pair"}   # works
+#        d = {{1, 2}: "pair"}              # TypeError
+#
 # 11. Is it safe to rely on the iteration order of a set staying consistent
 #     across Python versions or runs? Why or why not?
+#
+#    ANSWER: No. Set order is an implementation detail of the hash table and
+#    is not guaranteed by the language. It can change between Python
+#    versions, after elements are added/removed, and even between runs of
+#    the same program: string hashes are randomized per process (hash
+#    randomization, controlled by PYTHONHASHSEED), so a set of strings can
+#    print in a different order every time you run the script. If order
+#    matters, use sorted(s), a list, or dict.fromkeys().
 #
 # 12. How would you find all elements common to THREE different lists using
 #     set operations, in a single expression?
 #
+#    ANSWER:
+#        common = set(list1) & set(list2) & set(list3)
+#    or equivalently:
+#        common = set(list1).intersection(list2, list3)
+#    (intersection() accepts any iterables, so list2/list3 don't need
+#    converting first.)
+#
 # 13. What is a set comprehension, and how is its syntax different from a
 #     list comprehension?
+#
+#    ANSWER: A set comprehension builds a set from an expression in one line,
+#    automatically removing duplicates. The only syntax difference is the
+#    brackets: curly braces {} instead of square brackets [].
+#        [x % 3 for x in range(6)]  -> [0, 1, 2, 0, 1, 2]   (list)
+#        {x % 3 for x in range(6)}  -> {0, 1, 2}            (set)
+#    A dict comprehension also uses {}, but has a key: value pair:
+#        {x: x**2 for x in range(3)}
 #
 # 14. What happens if you try to create an "empty set" using `{}`? What does
 #     `{}` actually create in Python?
 #
+#    ANSWER: {} creates an empty DICTIONARY, not a set; type({}) is dict.
+#    This is because dicts were in Python before sets, so {} was already
+#    taken. To create an empty set you must use set().
+#
 # 15. What is the time complexity of adding an element to a set versus
 #     inserting into a sorted list while maintaining sort order?
+#
+#    ANSWER: set.add(x) is O(1) on average (hash and place it).
+#    Inserting into a sorted list is O(n): finding the position with
+#    bisect is O(log n), but list.insert() must then shift every later
+#    element one place to the right, which is O(n). The trade-off is that
+#    the set has no order, while the list stays sorted.
 #
 # 16. Given two sets representing "students in class A" and "students in
 #     class B", how would you find students in EITHER class but NOT both
 #     (i.e., exactly one of the two)?
 #
+#    ANSWER: Use symmetric difference:
+#        only_one = class_a ^ class_b
+#    or class_a.symmetric_difference(class_b). It's equivalent to
+#    (class_a | class_b) - (class_a & class_b).
+#    e.g. {"Alice","Bob","Charlie"} ^ {"Bob","Charlie","David"}
+#         -> {'Alice', 'David'}
+#
 # 17. Why can't a set contain another (mutable) set as an element, but it CAN
 #     contain a frozenset?
+#
+#    ANSWER: Set elements must be hashable. A regular set is mutable, so its
+#    hash could change after being stored, which would make the outer set
+#    unable to locate it; Python therefore makes sets unhashable and
+#    {{1, 2}} raises TypeError. A frozenset is immutable, so its hash is
+#    fixed and it can safely be stored: {frozenset([1, 2])} works.
 #
 # 18. What's the difference between set.intersection_update(other) and
 #     set.intersection(other)? Which one modifies the original set?
 #
+#    ANSWER: a.intersection(b) returns a NEW set with the common elements;
+#    a is unchanged. a.intersection_update(b) (same as a &= b) modifies a
+#    IN PLACE so that it keeps only the common elements, and returns None.
+#    So intersection_update() modifies the original.
+#
 # 19. How would you check if two sets share NO elements in common, without
 #     manually computing their intersection first?
 #
+#    ANSWER: Use a.isdisjoint(b). It returns True if there's no overlap,
+#    and it is more efficient than `not (a & b)` because it doesn't build a
+#    new intersection set and can stop as soon as it finds one shared
+#    element. It also accepts any iterable: a.isdisjoint([5, 6]).
+#
 # 20. Why are sets generally preferred over lists for tasks like removing
 #     duplicates or checking "does this exist" in performance-sensitive code?
+#
+#    ANSWER:
+#      - Membership checks: O(1) average for a set vs O(n) for a list.
+#        Doing this inside a loop turns an O(n^2) list algorithm into O(n).
+#      - Duplicates: a set rejects them automatically, so set(my_list) is a
+#        one-step, O(n) dedupe.
+#      - Set algebra (|, &, -, ^) expresses "common", "missing", and
+#        "combined" logic clearly and efficiently.
+#    Use a list instead when you need order, indexing, or duplicates.

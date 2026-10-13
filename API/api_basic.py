@@ -162,6 +162,23 @@ def example_bearer_token_flow():
     resp = requests.get("https://httpbin.org/bearer", headers=headers)
     print("authenticated call status:", resp.status_code, resp.json())
 
+## Usage of OAuth2
+TOKEN_URL = "https://auth.example.com/oauth/token"
+API_URL = "https://api.example.com/api/v1/devices"
+
+# 1. Get the token
+token_resp = requests.post(TOKEN_URL,
+    data={"grant_type": "client_credentials", "scope": "devices.read"},
+    auth=("my_client_id", "my_client_secret"),  # sent as Basic auth
+    timeout=10,)
+token_resp.raise_for_status()
+access_token = token_resp.json()["access_token"]
+
+# 2. Call the protected API
+resp = requests.get(API_URL,
+    headers={"Authorization": f"Bearer {access_token}"},
+    timeout=10,)
+print(resp.status_code, resp.json())
 
 # 9.4 Session / Cookie based login - typical of WEB APPLICATIONS (not pure APIs):
 #     you POST credentials to a login endpoint, the server sets a session cookie,

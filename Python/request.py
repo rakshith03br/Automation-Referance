@@ -10,7 +10,7 @@ print(req_obj.url)
 
 
 ## ==========================================================
-## ADDITIONAL NOTES FOR INTERVIEW PREPARATION (4 YOE LEVEL)
+## ADDITIONAL NOTES FOR INTERVIEW PREPARATION
 ## ==========================================================
 # NOTE: network-dependent examples below are written to be run in an
 # environment with internet access. They are commented with expected
@@ -270,7 +270,6 @@ many requests CONCURRENTLY within a single thread via asyncio.
 
 ## ==========================================================
 ## INTERVIEW QUESTIONS ON THE PYTHON REQUESTS LIBRARY
-## (For a candidate with ~4 years of experience. Answers intentionally omitted for practice.)
 ## ==========================================================
 
 # 1. What is the difference between response.text and response.content? When

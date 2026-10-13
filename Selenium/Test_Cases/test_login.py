@@ -1,7 +1,7 @@
 import pytest
 
-from Practice.Selenium.Page_Objects.login_page import LoginPage
-from Practice.Selenium.Page_Objects.inventory_page import InventoryPage
+from Selenium.Page_Objects.login_page import LoginPage
+from Selenium.Page_Objects.inventory_page import InventoryPage
 
 
 @pytest.mark.RUNTEST

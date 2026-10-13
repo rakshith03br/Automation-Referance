@@ -273,7 +273,6 @@ log_call()   # Positional args: ()   Keyword args: {}
 
 # ==============================================================================
 # INTERVIEW QUESTIONS ON *ARGS, **KWARGS & UNPACKING
-# (For a candidate with ~4 years of experience. Answers intentionally omitted for practice.)
 # ==============================================================================
 
 # 1. What is the difference between *args and **kwargs? What data structures do they
@@ -338,3 +337,178 @@ log_call()   # Positional args: ()   Keyword args: {}
 #
 # 20. Why might overusing **kwargs in a public API's function signatures be
 #     considered bad practice from a readability/maintainability standpoint?
+
+# ==============================================================================
+# ANSWERS TO INTERVIEW QUESTIONS
+# ==============================================================================
+
+# A1. *args vs **kwargs
+#     *args   -> collects extra POSITIONAL arguments into a TUPLE.
+#     **kwargs -> collects extra KEYWORD arguments into a DICT (name -> value).
+#     def f(*args, **kwargs): ...
+#     f(1, 2, a=3)  ->  args = (1, 2), kwargs = {'a': 3}
+
+# A2. Correct parameter order
+#     def f(pos_only, /, normal, default=val, *args, kw_only, **kwargs)
+#     Order: positional-only -> '/' -> positional-or-keyword (defaults after
+#     non-defaults) -> *args (or bare '*') -> keyword-only -> **kwargs.
+#     Wrong order (e.g. **kwargs before *args, or a non-default parameter after
+#     a default one in the positional section) -> SyntaxError at DEFINITION time,
+#     before any code runs.
+
+# A3. Why mutable defaults are dangerous
+#     Default values are evaluated ONCE, when the `def` statement executes (when
+#     the function object is created), not on each call. The object is stored on
+#     the function (see f.__defaults__) and reused for every call that omits the
+#     argument. If it is a list/dict/set and the function mutates it, the changes
+#     persist across calls:
+#         def f(x, items=[]): items.append(x); return items
+#         f(1) -> [1];  f(2) -> [1, 2]   # same list object each time
+#     Proof: buggy_append.__defaults__ shows the accumulated list.
+
+# A4. The fix, and why None is safe
+#     def f(x, items=None):
+#         if items is None:
+#             items = []
+#     The `[]` inside the body runs on EVERY call, so each call gets a fresh list.
+#     None is safe because it is an immutable singleton - nobody can mutate it,
+#     so sharing it across calls is harmless.
+#     Prefer `if items is None` over `items = items or []`: the `or` version also
+#     replaces a falsy value the caller passed on purpose (e.g. their own empty
+#     list, which they may expect to be appended to), silently breaking that.
+
+# A5. Positional-only parameters ('/')
+#     Parameters before '/' can only be passed by position, never by name.
+#         def divide(a, b, /): ...   ->  divide(10, 2) OK, divide(a=10, b=2) TypeError
+#     Why designers use them:
+#       - The parameter names are not part of the public API, so they can be
+#         renamed later without breaking callers.
+#       - Names are meaningless/obvious anyway (len(obj), divide(a, b)).
+#       - Avoids clashes: a positional-only name can safely also appear as a
+#         key in **kwargs.
+
+# A6. Bare '*' in a signature
+#     A bare '*' (no name) does NOT collect anything; it only marks that every
+#     parameter after it is KEYWORD-ONLY.
+#         def create_user(name, *, is_admin=False)
+#         create_user("Bob", True)            # TypeError
+#         create_user("Bob", is_admin=True)   # OK
+#     Difference from *args: *args also marks the keyword-only boundary but
+#     additionally captures extra positional arguments into a tuple. A bare '*'
+#     captures nothing, so extra positional arguments raise TypeError.
+
+# A7. Forwarding all arguments
+#     def wrapper(*args, **kwargs):
+#         return wrapped(*args, **kwargs)
+#     Collect everything on the way in, spread it on the way out, so the arguments
+#     reach the target unchanged. It is common in decorators because the decorator
+#     doesn't know (or care) what signature the decorated function has - the same
+#     wrapper works for ANY function, and it can add behaviour (timing, logging,
+#     retries, auth checks) before/after the call.
+
+# A8. functools.wraps
+#     @functools.wraps(func) copies metadata from the original function onto the
+#     wrapper: __name__, __doc__, __module__, __qualname__, __annotations__,
+#     and sets __wrapped__ (so inspect.signature can see through the wrapper).
+#     Without it, slow_add.__name__ would be 'inner' and the docstring would be
+#     lost. That breaks debugging, logs, help(), introspection tools, and
+#     frameworks that rely on function names (e.g. pytest fixtures/markers,
+#     Flask route endpoints).
+
+# A9. Duplicate keys in {**d1, **d2}
+#     The LATER dictionary wins: {**{'a': 1}, **{'a': 2}} -> {'a': 2}.
+#     Keys are processed left to right and later assignments overwrite earlier
+#     ones. (Python 3.9+ has the same behaviour for d1 | d2.)
+
+# A10. Keyword colliding with a positional argument
+#      def f(a, b): ...
+#      f(1, a=2)  ->  TypeError: f() got multiple values for argument 'a'
+#      The first positional value 1 already filled 'a', and then a=2 tries to
+#      fill it again.
+#      Similarly, f(a=1, **{'a': 2}) -> TypeError: f() got multiple values for
+#      keyword argument 'a'.
+
+# A11. Unpacking generators / non-dict mappings
+#      '*' works on ANY iterable (list, tuple, set, string, range, generator,
+#      dict -> its keys, file object...). A generator is consumed in the process:
+#          def gen(): yield 1; yield 2
+#          print(*gen())        # 1 2
+#      '**' requires a MAPPING (an object with keys() and __getitem__, not only
+#      dict - e.g. collections.OrderedDict, ChainMap, MappingProxyType). Passing
+#      a list of pairs fails: f(**[('a', 1)]) -> TypeError: argument after **
+#      must be a mapping. Also, in a call the keys must be strings.
+
+# A12. Extended iterable unpacking
+#      first, *rest = [1, 2, 3, 4]   ->  first = 1, rest = [2, 3, 4]
+#      The starred name soaks up "whatever is left" and is ALWAYS a list (even if
+#      the source is a tuple or string). Only one starred target is allowed per
+#      assignment. It is related to *args in that both use '*' to gather the
+#      leftovers, but it is an ASSIGNMENT feature (Python 3.0+) - it has nothing
+#      to do with function definitions, and *args gives a tuple while this gives
+#      a list.
+
+# A13. Must the names be "args" and "kwargs"?
+#      No. They are only convention. The single '*' and double '**' prefixes are
+#      what make a parameter variadic. def f(*values, **options) works
+#      identically. Stick to args/kwargs anyway unless a more descriptive name
+#      (e.g. *paths, **headers) genuinely improves readability.
+
+# A14. At least one positional argument required
+#      def f(first, *rest):
+#          ...
+#      `first` is a normal required parameter, so f() raises TypeError, while
+#      f(1), f(1, 2, 3) all work. Better than checking len(args) manually: the
+#      error is raised by Python itself and the signature documents the rule.
+
+# A15. Too many positional arguments with no *args
+#      Python raises TypeError at call time:
+#          def f(a, b): ...
+#          f(1, 2, 3)  ->  TypeError: f() takes 2 positional arguments but 3 were given
+#      Likewise, unexpected keyword args with no **kwargs ->
+#          TypeError: f() got an unexpected keyword argument 'x'
+
+# A16. super().__init__(*args, **kwargs) in subclasses
+#      The subclass often doesn't know (or want to care) which extra parameters
+#      the parent - or other classes in a multiple-inheritance chain (the MRO) -
+#      accept. Forwarding *args/**kwargs lets each class consume what it needs
+#      and pass the rest up, which supports cooperative multiple inheritance and
+#      means the child doesn't need updating when the parent gains a new
+#      parameter.
+#      Caveat: whatever remains at the top must be consumed. In the Base class
+#      above, super().__init__(**kwargs) ends at object.__init__, which accepts
+#      no extra arguments, so Child("x", 5, foo=1) would raise TypeError.
+
+# A17. Empty *args / **kwargs
+#      Yes. If nothing extra is passed, args == () (empty tuple) and
+#      kwargs == {} (empty dict). No error. That is why log_call() prints
+#      "Positional args: ()" and "Keyword args: {}".
+
+# A18. Dynamically calling with runtime-built arguments
+#      args = [1, 2]
+#      kwargs = {"z": 3}
+#      func(*args, **kwargs)
+#      Works with any callable, and the list/dict can be built at runtime (from
+#      config, JSON, test data, user input...). Typical use: data-driven tests,
+#      dispatch tables, running a callback registered with its own arguments
+#      (this is also what functools.partial does under the hood).
+
+# A19. Collecting vs unpacking
+#      In a DEFINITION, * / ** COLLECT: many separate arguments -> one tuple/dict.
+#          def f(*args, **kwargs)     # gathers
+#      In a CALL, * / ** UNPACK (spread): one container -> many separate
+#      arguments.
+#          f(*[1, 2, 3], **{"a": 1})  # spreads
+#      Same symbols, opposite directions: pack on the way in, unpack on the way out.
+
+# A20. Why overusing **kwargs in a public API is bad practice
+#      - The real parameters are invisible: the signature, help(), IDE
+#        autocomplete, and type checkers can't tell callers what is accepted.
+#      - Typos are silently swallowed (e.g. timeuot=5 is accepted and ignored),
+#        so bugs surface late or never.
+#      - Documentation drifts, because valid options live only in the body or
+#        in prose docs.
+#      - It's harder to refactor and test, since the supported surface is
+#        undefined, and defaults/validation have to be hand-written.
+#      Prefer explicit named parameters (optionally keyword-only); keep **kwargs
+#      for genuine pass-through cases (wrappers, decorators, forwarding to a
+#      parent/other function) and document where they end up.

@@ -51,7 +51,7 @@ t = (1, 2, 3, 2, 1)
 len(t)          # 5
 t.count(2)      # 2  — how many times 2 appears
 t.index(3)      # 2  — position of first occurrence of 3
-2 in t          # True — membership check
+print(2 in t)          # True — membership check
 
 # Concatenation and repetition
 a = (1, 2, 3)
@@ -269,7 +269,6 @@ print(sorted(points))   # [(0, 9), (1, 2), (1, 5)] -> compares first element fir
 
 ## ==========================================================
 ## INTERVIEW QUESTIONS ON PYTHON TUPLES
-## (For a candidate with ~4 years of experience. Answers intentionally omitted for practice.)
 ## ==========================================================
 
 # 1. Why are tuples generally faster and more memory-efficient than lists of

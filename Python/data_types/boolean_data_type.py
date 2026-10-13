@@ -2,8 +2,8 @@
 
 a = True
 b = False
-print(type(a))
-print(type(b))
+print(type(a))  # <class 'bool'>
+print(type(b))  # <class 'bool'>
 
 
 ## ==========================================================
@@ -39,8 +39,7 @@ print(f"{'*' * 50}")
 # 3. Truthy and Falsy values (VERY common interview topic)
 # -------------------------
 # Everything in Python has an inherent truth value when used in a boolean context.
-# FALSY values in Python (this is the complete list):
-#   False, None, 0, 0.0, 0j, '', [], (), {}, set(), range(0)
+# FALSY values in Python (this is the complete list) :- False, None, 0, 0.0, 0j, '', [], (), {}, set(), range(0)
 # Everything else is truthy.
 
 print(bool(0))          # False
@@ -114,7 +113,7 @@ print(f"{'*' * 50}")
 
 print(True & False)   # False -> works because bool is int under the hood (bitwise AND: 1 & 0)
 print(True | False)   # True
-print(~True)           # -2   -> bitwise NOT on int 1 -> -(1+1) = -2 (NOT a bool!)
+print(~True)           # -2   -> bitwise NOT on int 1 -> -(x+1) --> -(1+1) = -2 (NOT a bool!)
 # ~x == -(x + 1)
 # ~True == ~1 == -(1 + 1) == -2
 print(~False)           # # ~False == ~0 == -(0 + 1) == -1
@@ -294,7 +293,7 @@ A:  ~x = ~True = ~1 = -(x+1) = -(1+1) = -2
 -----------------------------------------------------------------------------------------------------------------------
 8.  What's wrong with writing `if a > 0 & a < 10:` instead of `if a > 0 and a < 10:`? 
     (Hint: think about operator precedence.)
-A:  Because & has higher precedence than > and <, Python evaluates 0 & a first, before either comparison:
+A:  Because '&' has higher precedence than '>' 'and' '<', Python evaluates 0 & a first, before either comparison:
         if a > (0 & a) < 10:
     Example:    
         a = 5
@@ -379,7 +378,7 @@ A:  Reason 1: Redundant style
 -----------------------------------------------------------------------------------------------------------------------
 12. What does chained comparison like `3 < 5 < 10` actually evaluate to internally? Is it the same as `(3 < 5) < 10`?
 A: What it actually evaluates to:
-    3 < 5 < 10 => (3 < 5) and (5 < 10)
+    3 < 5 < 10 ==> (3 < 5) and (5 < 10)
     
 -----------------------------------------------------------------------------------------------------------------------
 13. Is `True is True` guaranteed to be True in every case? Why can you safely use 'is' with booleans, unlike with 

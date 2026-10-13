@@ -22,8 +22,8 @@ for multiple lines"""
 # s[start:stop:step]
 
 s = "Python"
-#    012345
-#    654321
+#    012345     # +ve index
+#    654321     # -ve index
 print(s[0])     # 'P'
 print(s[-1])    # 'n'  (negative index counts from the end)
 print(s[1:4])   # 'yth'  (slicing: start included, end excluded)

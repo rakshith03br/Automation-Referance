@@ -253,7 +253,7 @@ content = Path("f.txt").read_text()
 
 
 ## ==========================================================
-## ADDITIONAL NOTES FOR INTERVIEW PREPARATION (4 YOE LEVEL)
+## ADDITIONAL NOTES FOR INTERVIEW PREPARATION
 ## ==========================================================
 # NOTE: the examples below are SELF-CONTAINED - they create their own
 # temporary sample files (and clean them up at the end) so this section runs
@@ -502,7 +502,6 @@ print(new_path.suffix, new_path.name, new_path.parent)   # .txt file.txt folder/
 
 ## ==========================================================
 ## INTERVIEW QUESTIONS ON PYTHON FILE HANDLING (files, CSV, JSON, pathlib)
-## (For a candidate with ~4 years of experience. Answers intentionally omitted for practice.)
 ## ==========================================================
 
 # 1. What is the difference between opening a file in 'w' mode versus 'a'

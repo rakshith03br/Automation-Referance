@@ -23,7 +23,7 @@ print(10 % 4)         # 2
 print(-10 % 4)        # 2  (Python's % result always has the sign of the divisor)
 
 # NOTE (interview point): a // b and a % b always satisfy:
-#   a == (a // b) * b + (a % b)
+#   a = (a // b) * b + (a % b)
 
 print(f"{'*' * 50}")
 
@@ -147,6 +147,13 @@ print(c1.conjugate())  # (3-4j)
 c2 = 1 + 2j
 print(c1 + c2)   # (4+6j)
 print(c1 * c2)   # complex multiplication (-5+10j)
+"""
+(1 + 2j) × (3 + 4j)
+1×3  +  1×4j  +  2j×3  +  2j×4j
+3    +  4j    +  6j    +  8j²
+3 + 4j + 6j - 8
+-5+10j
+"""
 
 print(f"{'*' * 50}")
 

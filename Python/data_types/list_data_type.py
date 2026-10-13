@@ -105,6 +105,9 @@ print(10 in l)   # False
 for value in range(len(l)):
     print(value, ':', l[value])
 
+l1 = [(i, v) for i, v in enumerate(l)]
+print(l1)
+
 ## concatination of sequences
 a = [0, 1, 2, 3, 4]
 b = [6, 7, 8, 9, 10]
